@@ -16,9 +16,6 @@ const Count = styled("div")(`
     width: 55px;
     font-size: 12px;
 `);
-// const Demo = styled("div")(({ theme }) => ({
-//   backgroundColor: theme.palette.background.paper,
-// }));
 
 interface MappedProductProps {
   image: string;
@@ -33,14 +30,12 @@ interface InteractiveListProps {
 }
 
 export default function InteractiveList({ products , onDelete}: InteractiveListProps) {
-  const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
         <Grid item lg={12}>
-          <List dense={dense}>
+          <List dense={false}>
             {Object.entries(products).map(([key, value]: any) => {
               const title = Object.keys(value)[0];
               const image = value[title][0].image;
@@ -60,7 +55,6 @@ export default function InteractiveList({ products , onDelete}: InteractiveListP
                     </ListItemAvatar>
                     <ListItemText
                       primary={title}
-                      secondary={secondary ? "Secondary text" : null}
                     />
                   </ListItem>
                   <Divider variant="inset" component="li" />

@@ -18,7 +18,7 @@ const Main: React.FunctionComponent = () => {
 
   useEffect(() => {
     disptach(setProducts(data));
-  }, [data]);
+  }, [data,disptach]);
 
   const newProducts = [...data || []].splice(5,4)
   return (
