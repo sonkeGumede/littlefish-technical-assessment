@@ -6,6 +6,11 @@ import { Facebook, Instagram } from "@mui/icons-material";
 import DropDown from "../components/DropDown";
 import Logo from "../components/Icons/logo";
 import Cart from "../components/Icons/cart";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import CartModal from "../components/Modal";
+import InteractiveList from "../components/List";
+import groupBy from "lodash/groupBy";
+import { deleteFromCart } from "../store/product/reducer";
 
 const StyledContainer = styled("div")(
   ({ theme }) =>
@@ -77,6 +82,41 @@ const LogoContainer = styled("div")(
 );
 
 const Header: React.FunctionComponent = () => {
+  const [isOpen, setOpen] = React.useState<boolean>(false);
+  const [mappeProdcut, setMappedProduct] = React.useState<any>([]);
+  const [total, setTotal] = React.useState<number>(0);
+  const dispatch = useAppDispatch();
+  const { cart, products }: any = useAppSelector((state: any) => state.product);
+  
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleDelete = (id: number) => {
+    dispatch(deleteFromCart({ id }));
+  };
+
+  React.useEffect(() => {
+    if (products) {
+      const holder = [];
+      let totalPrice = 0;
+      for (const x of products) {
+        for (const i of cart) {
+          if (x.id === i) {
+            holder.push(x);
+            totalPrice = totalPrice + x.price
+          }
+        }
+      }
+      const results = Object.values(groupBy(holder, "id")).map((x: any) => ({
+        [x[0].title]: x,
+      }));
+
+      setTotal(totalPrice);
+      setMappedProduct(results);
+    }
+  }, [products, cart]);
+ 
   return (
     <StyledContainer>
       <TopBar>
@@ -119,8 +159,11 @@ const Header: React.FunctionComponent = () => {
             OurCommerce
           </Typography>
         </LogoContainer>
-        <Cart />
+        <Cart count={cart.length} onClick={handleClick} />
       </MainBar>
+      <CartModal isOpen={isOpen} setOpen={setOpen} total={total}>
+        <InteractiveList products={mappeProdcut} onDelete={handleDelete} />
+      </CartModal>
     </StyledContainer>
   );
 };
