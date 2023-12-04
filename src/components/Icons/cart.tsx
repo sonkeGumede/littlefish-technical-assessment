@@ -4,6 +4,7 @@ import { SVGProps } from "react";
 
 const CartContainer = styled("div")(`
     height: 20px;
+    cursor: pointer;
 `);
 const Count = styled(`div`)(
   ({ theme }) =>
@@ -26,8 +27,13 @@ const Count = styled(`div`)(
 `
 );
 
-const Cart = (props: SVGProps<SVGSVGElement>) => (
-  <CartContainer>
+interface CartIconProps extends SVGProps<SVGSVGElement> {
+    count: number;
+    onClick: ()=>void;
+}
+
+const Cart:React.FunctionComponent<CartIconProps> = (props) => (
+  <CartContainer onClick={props.onClick}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width={25}
@@ -41,7 +47,7 @@ const Cart = (props: SVGProps<SVGSVGElement>) => (
       />
     </svg>
     <Count>
-      <span>3</span>
+      <span>{props.count}</span>
     </Count>
   </CartContainer>
 );
